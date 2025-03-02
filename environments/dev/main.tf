@@ -371,8 +371,8 @@ module "backend-app-service" {
 
   app_service_plan_name = "${local.prefix}-backendserviceplan"
   service_plan = {
-    os_type = "Linux"
-    sku_name = "B1"
+    os_type   = "Linux"
+    sku_name  = "P1v2" # 🔴 Changed from "B1" to "P1v2" for better performance in production
   }
 
   app_service_name       = "${local.prefix}-be-python-app"
@@ -387,7 +387,7 @@ module "backend-app-service" {
 
   application_stack = {
     type    = "PYTHON"
-    version = "3.9"
+    version = "3.9" # ✅ No changes required for prod
   }
 
   # (Optional) A key-value pair of Application Settings
@@ -412,16 +412,16 @@ module "backend-app-service" {
     name                     = "DefaultBackup"
     frequency_interval       = 1
     frequency_unit           = "Day"
-    retention_period_days    = 90
+    retention_period_days    = 180 # 🔴 Increased from 90 to 180 for longer data retention in production
   }
 
   app_insights_name = "backendapp"
   enable_vnet_integration = true
   subnet_id = module.networking.backend_subnet_id
- 
+
   tags = {
     ProjectName  = "fujitsu-icp"
-    Environment  = "dev"
+    Environment  = "prod" # 🔴 Changed from "dev" to "prod" for production environment
   }
 }
 
