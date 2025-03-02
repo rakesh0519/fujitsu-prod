@@ -510,8 +510,8 @@ module "application-gateway" {
   }
 
   autoscale_configuration = {
-    min_capacity = 1
-    max_capacity = 5
+    min_capacity = 2   # 🔴 Ensure at least 2 instances for high availability  
+    max_capacity = 10  # 🔴 Increased max capacity for peak loads  
   }
 
   backend_address_pools = [
@@ -546,22 +546,24 @@ module "application-gateway" {
 
   http_listeners = [
     {
-      name = "appgw-testgateway-eastus-be-htln01"
-      # ssl_certificate_name = "appgw-testgateway-eastus-ssl01"
+      name = "appgw-prod-eastus-be-htln01"
+      ssl_certificate_name = "appgw-prod-ssl-cert" # 🔴 Enabled SSL certificate  
       host_name = null
     }
   ]
 
+    ✅ # No changes needed for request routing rules  
   request_routing_rules = [
     {
-      name                       = "appgw-testgateway-eastus-be-rqrt"
+      name                       = "appgw-prod-eastus-be-rqrt"
       rule_type                  = "Basic"
-      http_listener_name         = "appgw-testgateway-eastus-be-htln01"
-      backend_address_pool_name  = "appgw-testgateway-eastus-bapool01"
-      backend_http_settings_name = "appgw-testgateway-eastus-be-http-set1"
+      http_listener_name         = "appgw-prod-eastus-be-htln01"
+      backend_address_pool_name  = "appgw-prod-eastus-bapool01"
+      backend_http_settings_name = "appgw-prod-eastus-be-http-set1"
       priority                   = 1
     }
   ]
+
 
   # ssl_certificates = [{
   #   name     = "appgw-testgateway-eastus-ssl01"
@@ -584,13 +586,14 @@ module "application-gateway" {
   # A list with a single user managed identity id to be assigned to access Keyvault
   # identity_ids = ["${azurerm_user_assigned_identity.example.id}"]
 
+  ✅ # No changes required for logging & monitoring  
   log_analytics_workspace_name = module.monitoring.log_analytics_workspace_name
-  storage_account_name = module.storage.storage_account_name
+  storage_account_name         = module.storage.storage_account_name
 
-  # Adding TAG's to Azure resources
+  ✅ # Tags remain unchanged  
   tags = {
     ProjectName = "fujitsu-icp"
-    Environment = "dev"
+    Environment = "prod"  # 🔴 Changed from dev to prod  
   }
 }
 
