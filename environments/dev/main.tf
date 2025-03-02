@@ -603,6 +603,7 @@ module "monitoring" {
   location            = local.location
 
   log_analytics_workspace_name = "${local.prefix}-logws"
-  sku = "PerGB2018"
-  retention_in_days = "30"
+  sku                          = "PerGB2018" # ✅ No change, as it's a standard SKU for log analytics.
+  retention_in_days            = "90"        # 🔴 Increased from 30 days to 90 for better log retention in production.
+}
 }
