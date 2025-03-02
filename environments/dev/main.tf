@@ -343,7 +343,6 @@ module "frontend-app-service" {
   }
 }
 
-
 module "api_management" {
   source              = "../../modules/api_management"
   depends_on          = [module.frontend-app-service]
@@ -352,7 +351,7 @@ module "api_management" {
   api_management_name = "${local.prefix}-api-management-v2"
   publisher_name      = "Rock Paper Panda"
   publisher_email     = "team@rockpaperpanda.com"
-  sku_name            = "Developer_1"
+  sku_name            = "Premium_1" # 🔴 Modified: Changed from "Developer_1" to "Premium_1" for production to support higher performance, scaling, and VNET integration
 }
 
 module "communication_service" {
