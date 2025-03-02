@@ -289,7 +289,7 @@ module "frontend-app-service" {
   app_service_plan_name = "${local.prefix}-frontendserviceplan"
   service_plan = {
     os_type = "Linux"
-    sku_name = "B1"
+    sku_name = "P1v2" # 🔴 Modified: Changed from B1 to P1v2 for production to ensure better performance and scaling
   }
 
   app_service_name       = "${local.prefix}-fe-flutter-app"
@@ -297,51 +297,52 @@ module "frontend-app-service" {
   enable_https           = true
 
   site_config = {
-    always_on                 = true
-    ftps_state                = "FtpsOnly"
-    http2_enabled             = true
+    always_on                 = true # ✅ No changes required for prod
+    ftps_state                = "FtpsOnly" # ✅ No changes required for prod
+    http2_enabled             = true # ✅ No changes required for prod
   }
 
   application_stack = {
     type    = "NODE"
-    version = "20-lts"
+    version = "20-lts" # ✅ No changes required for prod
   }
 
   # (Optional) A key-value pair of Application Settings
   app_settings = {
-    APPINSIGHTS_PROFILERFEATURE_VERSION             = "1.0.0"
-    APPINSIGHTS_SNAPSHOTFEATURE_VERSION             = "1.0.0"
-    DiagnosticServices_EXTENSION_VERSION            = "~3"
-    InstrumentationEngine_EXTENSION_VERSION         = "disabled"
-    SnapshotDebugger_EXTENSION_VERSION              = "disabled"
-    XDT_MicrosoftApplicationInsights_BaseExtensions = "disabled"
-    XDT_MicrosoftApplicationInsights_Java           = "1"
-    XDT_MicrosoftApplicationInsights_Mode           = "recommended"
-    XDT_MicrosoftApplicationInsights_NodeJS         = "1"
-    XDT_MicrosoftApplicationInsights_PreemptSdk     = "disabled"
+    APPINSIGHTS_PROFILERFEATURE_VERSION             = "1.0.0" # ✅ No changes required for prod
+    APPINSIGHTS_SNAPSHOTFEATURE_VERSION             = "1.0.0" # ✅ No changes required for prod
+    DiagnosticServices_EXTENSION_VERSION            = "~3" # ✅ No changes required for prod
+    InstrumentationEngine_EXTENSION_VERSION         = "disabled" # ✅ No changes required for prod
+    SnapshotDebugger_EXTENSION_VERSION              = "disabled" # ✅ No changes required for prod
+    XDT_MicrosoftApplicationInsights_BaseExtensions = "disabled" # ✅ No changes required for prod
+    XDT_MicrosoftApplicationInsights_Java           = "1" # ✅ No changes required for prod
+    XDT_MicrosoftApplicationInsights_Mode           = "recommended" # ✅ No changes required for prod
+    XDT_MicrosoftApplicationInsights_NodeJS         = "1" # ✅ No changes required for prod
+    XDT_MicrosoftApplicationInsights_PreemptSdk     = "disabled" # ✅ No changes required for prod
   }
 
-  enable_backup        = true
-  storage_account_name = module.storage.storage_account_name
-  storage_container_name = "frontend-appservice-backup"
+  enable_backup        = true # ✅ No changes required for prod
+  storage_account_name = module.storage.storage_account_name # ✅ No changes required for prod
+  storage_container_name = "frontend-appservice-backup" # ✅ No changes required for prod
   backup_settings = {
-    enabled                  = true
-    name                     = "DefaultBackup"
-    frequency_interval       = 1
-    frequency_unit           = "Day"
-    retention_period_days    = 90
+    enabled                  = true # ✅ No changes required for prod
+    name                     = "DefaultBackup" # ✅ No changes required for prod
+    frequency_interval       = 1 # ✅ No changes required for prod
+    frequency_unit           = "Day" # ✅ No changes required for prod
+    retention_period_days    = 180 # 🔴 Modified: Increased retention period from 90 to 180 days for better disaster recovery in prod
   }
 
-  app_insights_name = "frontendapp"
+  app_insights_name = "frontendapp" # ✅ No changes required for prod
 
-  enable_vnet_integration = true
-  subnet_id = module.networking.frontend_subnet_id
+  enable_vnet_integration = true # ✅ No changes required for prod
+  subnet_id = module.networking.frontend_subnet_id # ✅ No changes required for prod
 
   tags = {
-    ProjectName  = "fujitsu-icp"
-    Environment  = "dev"
+    ProjectName  = "fujitsu-icp" # ✅ No changes required for prod
+    Environment  = "prod" # 🔴 Modified: Changed from "dev" to "prod"
   }
 }
+
 
 module "api_management" {
   source              = "../../modules/api_management"
