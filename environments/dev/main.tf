@@ -19,39 +19,43 @@ module "cosmos" {
     "${local.prefix}-cosmos-account" = {
         offer_type                            = "Standard"
         kind                                  = "GlobalDocumentDB"
-        analytical_storage_enabled            = false
-        public_network_access_enabled         = true
-        key_vault_key_id                      = null 
-        access_key_metadata_writes_enabled    = true 
-        network_acl_bypass_for_azure_services = true 
+        analytical_storage_enabled            = false  
+        🔴 public_network_access_enabled         = false  # Increased security in prod
+        🔴 key_vault_key_id                      = "<PROD_KEYVAULT_KEY_ID>"  # Use Key Vault for key management in prod
+        🔴 access_key_metadata_writes_enabled    = false  # Restrict metadata writes for added security
+        🔴 network_acl_bypass_for_azure_services = false # Prevent Azure services from bypassing ACL in prod
         is_virtual_network_filter_enabled     = true
     }
  }
 
   consistency_policy = {
-    consistency_level       = "Session"
+    🔴 consistency_level       = "Strong"  # Strong consistency for better data reliability in prod
   }
- 
+
   failover_locations = [
     {
       location          = local.location
       failover_priority = 0
+    },
+    🔴 {
+      location          = "eastus"  # Adding a secondary failover region for HA in prod
+      failover_priority = 1
     }
   ]
 
-  capabilities = ["EnableServerless"]
+  capabilities = ["EnableServerless"]  # ✅ No changes required for prod
 
   virtual_network_rules = [
     {
       id = module.networking.db_subnet_id
       ignore_missing_vnet_service_endpoint = false
     }
-  ]
+  ]  # ✅ No changes required for prod
 
   backup = {
-    type                = "Periodic"
-    interval_in_minutes = 240
-    retention_in_hours  = 8
+    🔴 type                = "Continuous"  # Continuous backup for better disaster recovery in prod
+    🔴 interval_in_minutes = null  # Not needed for continuous backup
+    🔴 retention_in_hours  = null  # Not needed for continuous backup
   }
 
   cors_rules = {
@@ -60,27 +64,26 @@ module "cosmos" {
     allowed_origins    = ["*"]
     exposed_headers    = ["*"]
     max_age_in_seconds = 3600
-  }
+  }  # ✅ No changes required for prod
 
-  enable_advanced_threat_protection = true
-  enable_private_endpoint       = true
-  virtual_network_name          = module.networking.virtual_network_name
-  private_subnet_address_prefix = module.networking.pvt_subnet.address_prefix
+  enable_advanced_threat_protection = true  # ✅ No changes required for prod
+  enable_private_endpoint       = true  # ✅ No changes required for prod
+  virtual_network_name          = module.networking.virtual_network_name  # ✅ No changes required for prod
+  private_subnet_address_prefix = module.networking.pvt_subnet.address_prefix  # ✅ No changes required for prod
 
   allowed_ip_range_cidrs = [
-    "1.2.3.4",
-    "0.0.0.0"
+    🔴 "10.0.0.0/16"  # Restrict access to internal IPs in prod
   ]
 
-  dedicated_instance_size = "Cosmos.D4s"
-  dedicated_instance_count = 1
+  🔴 dedicated_instance_size = "Cosmos.D8s"  # Increased instance size for higher workloads in prod
+  🔴 dedicated_instance_count = 2  # Increased instance count for better performance in prod
 
-  log_analytics_workspace_name = module.monitoring.log_analytics_workspace_name
-  storage_account_name = module.storage.storage_account_name
+  log_analytics_workspace_name = module.monitoring.log_analytics_workspace_name  # ✅ No changes required for prod
+  storage_account_name = module.storage.storage_account_name  # ✅ No changes required for prod
   
   tags = {
     ProjectName  = "fujitsu-icp"
-    Environment  = "dev"
+    🔴 Environment  = "prod"  # Updated tag to reflect production environment
   }
 }
 
