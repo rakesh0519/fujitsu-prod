@@ -356,11 +356,11 @@ module "api_management" {
 
 module "communication_service" {
   source                  = "../../modules/communication_service"
-  depends_on = [module.backend-app-service]
-  resource_group_name = azurerm_resource_group.resourcegroup.name
-  location            = local.location
+  depends_on              = [module.backend-app-service]
+  resource_group_name     = azurerm_resource_group.resourcegroup.name
+  location                = local.location
   communication_service_name = "${local.prefix}-communication-svc"
-  data_location           = local.data_location
+  data_location           = local.data_location # ✅ No changes required for prod
 }
 
 module "backend-app-service" {
