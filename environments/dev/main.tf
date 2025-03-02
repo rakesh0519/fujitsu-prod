@@ -251,7 +251,7 @@ module "storage" {
   storage_account_name  = "${local.prefix}storage"
   account_kind = "StorageV2"
   access_tier = "Hot"
-  skuname = "Standard_ZRS"
+  skuname = "Premium_LRS" # Changed for production
 
   enable_advanced_threat_protection = true
 
@@ -276,7 +276,7 @@ module "storage" {
 
   tags = {
     ProjectName  = "fujitsu-icp"
-    Environment  = "dev"
+    Environment  = "prod" # Updated for production
   }
 }
 
