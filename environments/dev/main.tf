@@ -21,7 +21,7 @@ module "cosmos" {
         kind                                  = "GlobalDocumentDB"
         analytical_storage_enabled            = false  
         public_network_access_enabled         = false  # Increased security in prod
-        key_vault_key_id                      = "<PROD_KEYVAULT_KEY_ID>"  # Use Key Vault for key management in prod
+        key_vault_key_id                     = null
         access_key_metadata_writes_enabled    = false  # Restrict metadata writes for added security
         network_acl_bypass_for_azure_services = false # Prevent Azure services from bypassing ACL in prod
         is_virtual_network_filter_enabled     = true
