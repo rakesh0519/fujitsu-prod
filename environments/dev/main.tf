@@ -239,7 +239,7 @@ module "networking" {
 
   tags = {
     ProjectName = "fujitsu-icp"
-    Environment = "dev"
+    🔴Environment = "Prod"
   }
 }
 
