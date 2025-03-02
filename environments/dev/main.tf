@@ -432,14 +432,14 @@ module "key-vault" {
   location            = local.location
 
   key_vault_name             = "${local.prefix}-keyvault"
-  key_vault_sku_pricing_tier = "premium"
+  key_vault_sku_pricing_tier = "premium" # ✅ Premium SKU is ideal for production
 
   # Once `Purge Protection` has been Enabled it's not possible to Disable it
   # Deleting the Key Vault with `Purge Protection` enabled will schedule the Key Vault to be deleted
   # The default retention period is 90 days, possible values are from 7 to 90 days
   # use `soft_delete_retention_days` to set the retention period
-  enable_purge_protection = false
-  soft_delete_retention_days = 90
+  enable_purge_protection = true # 🔴 Enabled for production security
+  soft_delete_retention_days = 90 # ✅ Retained at 90 days for compliance
 
   # Access policies for users, you can provide list of Azure AD users and set permissions.
   # Make sure to use list of user principal names of Azure AD users.
@@ -462,7 +462,7 @@ module "key-vault" {
   #     storage_permissions     = ["Backup", "Get", "List", "Recover"]
   #   },
 
-  #   # Access policies for Azure AD Service Principlas
+  #   # Access policies for Azure AD Service Principals
   #   # To enable this feature, provide a list of Azure AD SPN and set permissions as required.
   #   {
   #     azure_ad_service_principal_names = [""]
@@ -476,7 +476,7 @@ module "key-vault" {
   # When you Add `usernames` with empty password this module creates a strong random password
   # use .tfvars file to manage the secrets as variables to avoid security issues.
   secrets = {
-    "message" = "Hello, world!"
+    "message" = "Hello, production!" # 🔴 Changed secret message for production
     "vmpass"  = ""
   }
 
@@ -488,9 +488,10 @@ module "key-vault" {
 
   tags = {
     ProjectName  = "fujitsu-icp"
-    Environment  = "dev"
+    Environment  = "prod" # 🔴 Updated environment from "dev" to "prod"
   }
 }
+
 
 module "application-gateway" {
   source     = "../../modules/application_gateway"
